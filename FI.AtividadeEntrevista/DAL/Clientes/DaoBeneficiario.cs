@@ -32,12 +32,13 @@ namespace FI.AtividadeEntrevista.DAL
             return ret;
         }
 
-        internal List<Beneficiario> Pesquisa(int iniciarEm, int quantidade, string campoOrdenacao, bool crescente, out int qtd)
+        internal List<Beneficiario> Pesquisa(long idCliente, int iniciarEm, int quantidade, string campoOrdenacao, bool crescente, out int qtd)
         {
             List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
 
             parametros.Add(new System.Data.SqlClient.SqlParameter("iniciarEm", iniciarEm));
             parametros.Add(new System.Data.SqlClient.SqlParameter("quantidade", quantidade));
+            parametros.Add(new System.Data.SqlClient.SqlParameter("idCliente", idCliente));
             parametros.Add(new System.Data.SqlClient.SqlParameter("campoOrdenacao", campoOrdenacao));
             parametros.Add(new System.Data.SqlClient.SqlParameter("crescente", crescente));
 

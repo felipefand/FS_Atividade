@@ -40,7 +40,7 @@ namespace WebAtividadeEntrevista.Controllers
         }
 
         [HttpPost]
-        public JsonResult BeneficiarioList(int jtStartIndex = 0, int jtPageSize = 0, string jtSorting = null)
+        public JsonResult BeneficiarioList(int jtStartIndex = 0, int jtPageSize = 0, string jtSorting = null, long idCliente = 0)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace WebAtividadeEntrevista.Controllers
                     crescente = array[1];
 
                 //List<Beneficiario> beneficiarios = new BoBeneficiario().Pesquisa(jtStartIndex, jtPageSize, campo, crescente.Equals("ASC", StringComparison.InvariantCultureIgnoreCase), out qtd);
-                List<Beneficiario> beneficiarios = new BoBeneficiario().Pesquisa(0, 5, campo, crescente.Equals("ASC", StringComparison.InvariantCultureIgnoreCase), out qtd);
+                List<Beneficiario> beneficiarios = new BoBeneficiario().Pesquisa(idCliente, 0, 5, campo, crescente.Equals("ASC", StringComparison.InvariantCultureIgnoreCase), out qtd);
 
                 return Json(new { Result = "OK", Records = beneficiarios, TotalRecordCount = qtd });
             }

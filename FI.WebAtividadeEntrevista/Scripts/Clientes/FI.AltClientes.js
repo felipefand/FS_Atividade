@@ -49,10 +49,13 @@ $(document).ready(function () {
 
 
     $('#beneficiarios').on('click', () => {
+        var idCliente = window.location.pathname.toString().split('/').pop();
+
         $.ajax({
             url: "/beneficiario/beneficiariolist/",
             method: "POST",
             data: {
+                "idCliente": idCliente,
                 "paging": true,
                 "pageSize": 5,
                 "sorting": true,
@@ -112,7 +115,6 @@ $(document).ready(function () {
             }
         })
     })
-    
 })
 
 function ModalDialog(titulo, texto) {
