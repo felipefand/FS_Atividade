@@ -66,5 +66,67 @@ namespace WebAtividadeEntrevista.Controllers
                 return Json(new { Result = "ERROR", Message = ex.Message });
             }
         }
+
+        [HttpPost]
+        public JsonResult Alterar(BeneficiarioModel model)
+        {
+            BoBeneficiario bo = new BoBeneficiario();
+
+            if (!this.ModelState.IsValid)
+            {
+                List<string> erros = (from item in ModelState.Values
+                                      from error in item.Errors
+                                      select error.ErrorMessage).ToList();
+
+                Response.StatusCode = 400;
+                return Json(string.Join(Environment.NewLine, erros));
+            }
+            else
+            {
+                bo.Alterar(new Beneficiario()
+                {
+                    Id = model.Id,
+                    IdCliente = model.IdCliente,
+                    Nome = model.Nome,
+                    CPF = model.CPF
+                });
+
+                return Json("Cadastro alterado com sucesso");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Alterar(long id)
+        {
+            BoBeneficiario bo = new BoBeneficiario();
+            Beneficiario beneficiario = bo.Consultar(id);
+            BeneficiarioModel model = null;
+
+            if (beneficiario != null)
+            {
+                model = new BeneficiarioModel()
+                {
+                    Id = beneficiario.Id,
+                    IdCliente = beneficiario.IdCliente,
+                    Nome = beneficiario.Nome,
+                    CPF = beneficiario.CPF
+                };
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public JsonResult Excluir(long id)
+        {
+            BoBeneficiario bo = new BoBeneficiario();
+            Beneficiario beneficiario = bo.Consultar(id);
+
+            if (beneficiario == null) return Json("Beneficiário não encontrado.");
+            
+            bo.Excluir(id);
+
+            return Json("Remoção efetuada com sucesso.");
+        }
     }
 }

@@ -23,5 +23,23 @@ namespace FI.AtividadeEntrevista.BLL
             DAL.DaoBeneficiario benef = new DAL.DaoBeneficiario();
             return benef.Pesquisa(idCliente, iniciarEm, quantidade, campoOrdenacao, crescente, out qtd);
         }
+
+        public DML.Beneficiario Consultar(long id)
+        {
+            DAL.DaoBeneficiario benef = new DAL.DaoBeneficiario();
+            return benef.Consultar(id);
+        }
+
+        public void Alterar(DML.Beneficiario beneficiario)
+        {
+            DAL.DaoBeneficiario benef = new DAL.DaoBeneficiario();
+            benef.Alterar(beneficiario);
+        }
+
+        public void Excluir (long id)
+        {
+            DAL.DaoBeneficiario benef = new DAL.DaoBeneficiario();
+            benef.Excluir(id);
+        }
     }
 }
