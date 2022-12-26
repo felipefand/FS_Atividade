@@ -17,6 +17,12 @@ namespace WebAtividadeEntrevista.Controllers
         {
             BoBeneficiario bo = new BoBeneficiario();
 
+            if (VerificaCPFRepetido(model))
+            {
+                //return Json(new { Result = "ERROR", Message = "CPF Já cadastrado para este cliente." });
+                return Json("CPF Já cadastrado para este cliente.");
+            }
+
             if (!this.ModelState.IsValid)
             {
                 List<string> erros = (from item in ModelState.Values
@@ -57,7 +63,7 @@ namespace WebAtividadeEntrevista.Controllers
                     crescente = array[1];
 
                 //List<Beneficiario> beneficiarios = new BoBeneficiario().Pesquisa(jtStartIndex, jtPageSize, campo, crescente.Equals("ASC", StringComparison.InvariantCultureIgnoreCase), out qtd);
-                List<Beneficiario> beneficiarios = new BoBeneficiario().Pesquisa(idCliente, 0, 5, campo, crescente.Equals("ASC", StringComparison.InvariantCultureIgnoreCase), out qtd);
+                List<Beneficiario> beneficiarios = new BoBeneficiario().Pesquisa(idCliente, 0, 99, campo, crescente.Equals("ASC", StringComparison.InvariantCultureIgnoreCase), out qtd);
 
                 return Json(new { Result = "OK", Records = beneficiarios, TotalRecordCount = qtd });
             }
@@ -72,7 +78,7 @@ namespace WebAtividadeEntrevista.Controllers
         {
             BoBeneficiario bo = new BoBeneficiario();
 
-            if (!this.ModelState.IsValid)
+            if (!this.ModelState.IsValid || VerificaCPFRepetido(model))
             {
                 List<string> erros = (from item in ModelState.Values
                                       from error in item.Errors
@@ -127,6 +133,26 @@ namespace WebAtividadeEntrevista.Controllers
             bo.Excluir(id);
 
             return Json("Remoção efetuada com sucesso.");
+        }
+
+        private bool VerificaCPFRepetido(BeneficiarioModel model)
+        {
+            BoBeneficiario bo = new BoBeneficiario();
+
+            int qtd = 0;
+            List<Beneficiario> beneficiarios = new BoBeneficiario().Pesquisa(model.IdCliente, 0, 5, "Nome", "ASC".Equals("ASC", StringComparison.InvariantCultureIgnoreCase), out qtd);
+
+            foreach (var benef in beneficiarios)
+            {
+                if (benef.CPF.Equals(model.CPF)) return true;
+            }
+
+            BoCliente boc = new BoCliente();
+            var cliente = boc.Consultar(model.IdCliente);
+
+            if (model.CPF == cliente.CPF) return true;
+
+            return false;
         }
     }
 }
