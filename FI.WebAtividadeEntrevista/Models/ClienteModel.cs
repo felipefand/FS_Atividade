@@ -26,6 +26,12 @@ namespace WebAtividadeEntrevista.Models
         public string Cidade { get; set; }
 
         /// <summary>
+        /// CPF
+        /// </summary>
+        [CPFValidator(ErrorMessage = "Digite um CPF válido")]
+        public string CPF { get; set; }
+
+        /// <summary>
         /// E-mail
         /// </summary>
         [RegularExpression(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$", ErrorMessage = "Digite um e-mail válido")]
