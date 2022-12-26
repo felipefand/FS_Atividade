@@ -46,6 +46,72 @@ $(document).ready(function () {
             }
         });
     })
+
+
+    $('#beneficiarios').on('click', () => {
+        $.ajax({
+            url: "/beneficiario/beneficiariolist/",
+            method: "POST",
+            data: {
+                "paging": true,
+                "pageSize": 5,
+                "sorting": true,
+                "defaultSorting": "Nome ASC"
+            },
+            success: function (data) {
+                console.log(data.Records);
+            }
+        });
+
+        var form = '<form id="formBeneficiario" method="post">                                          ' +
+            '   <div class="row align-items-end mb-2">                                                  ' +
+            '       <div class="col-md-5">                                                              ' +
+            '           <label for="CPF">CPF:</label>                                                   ' +
+            '           <input id="beneficiario-cpf" required="required" type="text" class="form-control" id="CPF" name="CPF" placeholder="Ex.: 010.011.111-00" maxlength="14">' +
+            '       </div>                                                                              ' +
+            '       <div class="col-md-5">                                                              ' +
+            '           <label for="Nome">Nome:</label>                                             ' +
+            '           <input id="beneficiario-nome" required="required" type="text" class="form-control" id="Nome" name="Nome" placeholder="Ex.: João" maxlength="50">' +
+            '       </div>                                                                              ' +
+            '       <div class="col-md-2">                                                              ' +
+            '           <button id="beneficiario-btn" type="submit" class="btn btn-sm btn-success">Incluir</button>           ' +
+            '       </div>                                                                              ' +
+            '   </div>                                                                                  ' +
+            '</form>'
+
+        ModalDialog("Beneficiários", form);
+
+        $('#formBeneficiario').submit(function (e) {
+            e.preventDefault();
+
+            var urlPost = "/beneficiario/incluir/";
+            var userId = window.location.pathname.toString().split('/');
+
+            if (userId) {
+                $.ajax({
+                    url: urlPost,
+                    method: "POST",
+                    data: {
+                        "NOME": $(this).find("#beneficiario-nome").val(),
+                        "CPF": $(this).find("#beneficiario-cpf").val(),
+                        "IDCLIENTE": userId.pop()
+                    },
+                    error:
+                        function (r) {
+                            if (r.status == 400)
+                                ModalDialog("Ocorreu um erro", r.responseJSON.replace("\r\n", "<br>"));
+                            else if (r.status == 500)
+                                ModalDialog("Ocorreu um erro", "Ocorreu um erro interno no servidor.");
+                        },
+                    success:
+                        function (r) {
+                            ModalDialog("Sucesso!", r)
+                            $("#formBeneficiario")[0].reset();
+                        }
+                });
+            }
+        })
+    })
     
 })
 
