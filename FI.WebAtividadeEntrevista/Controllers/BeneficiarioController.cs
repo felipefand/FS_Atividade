@@ -11,6 +11,10 @@ namespace WebAtividadeEntrevista.Controllers
 {
     public class BeneficiarioController : Controller
     {
+        public ActionResult Index(int id)
+        {
+            return PartialView();
+        }
 
         [HttpPost]
         public JsonResult Incluir(BeneficiarioModel model)
@@ -46,14 +50,13 @@ namespace WebAtividadeEntrevista.Controllers
         }
 
         [HttpPost]
-        public JsonResult BeneficiarioList(int jtStartIndex = 0, int jtPageSize = 0, string jtSorting = null, long idCliente = 0)
+        public JsonResult BeneficiarioList(long idCliente, int jtStartIndex = 0, int jtPageSize = 0, string jtSorting = null)
         {
             try
             {
                 int qtd = 0;
                 string campo = string.Empty;
                 string crescente = string.Empty;
-                //string[] array = jtSorting.Split(' ');
                 string[] array = { "Nome", "ASC" };
 
                 if (array.Length > 0)
@@ -62,9 +65,8 @@ namespace WebAtividadeEntrevista.Controllers
                 if (array.Length > 1)
                     crescente = array[1];
 
-                //List<Beneficiario> beneficiarios = new BoBeneficiario().Pesquisa(jtStartIndex, jtPageSize, campo, crescente.Equals("ASC", StringComparison.InvariantCultureIgnoreCase), out qtd);
-                List<Beneficiario> beneficiarios = new BoBeneficiario().Pesquisa(idCliente, 0, 99, campo, crescente.Equals("ASC", StringComparison.InvariantCultureIgnoreCase), out qtd);
-
+                List<Beneficiario> beneficiarios = new BoBeneficiario().Pesquisa(idCliente, jtStartIndex, jtPageSize, campo, crescente.Equals("ASC", StringComparison.InvariantCultureIgnoreCase), out qtd);
+               
                 return Json(new { Result = "OK", Records = beneficiarios, TotalRecordCount = qtd });
             }
             catch (Exception ex)
@@ -78,7 +80,13 @@ namespace WebAtividadeEntrevista.Controllers
         {
             BoBeneficiario bo = new BoBeneficiario();
 
-            if (!this.ModelState.IsValid || VerificaCPFRepetido(model))
+            if (VerificaCPFRepetido(model))
+            {
+                //return Json(new { Result = "ERROR", Message = "CPF Já cadastrado para este cliente." });
+                return Json("CPF Já cadastrado para este beneficiário.");
+            }
+
+            if (!this.ModelState.IsValid)
             {
                 List<string> erros = (from item in ModelState.Values
                                       from error in item.Errors
@@ -101,26 +109,26 @@ namespace WebAtividadeEntrevista.Controllers
             }
         }
 
-        [HttpPost]
-        public ActionResult Alterar(long id)
-        {
-            BoBeneficiario bo = new BoBeneficiario();
-            Beneficiario beneficiario = bo.Consultar(id);
-            BeneficiarioModel model = null;
+        //[HttpPost]
+        //public ActionResult Alterar(long id)
+        //{
+        //    BoBeneficiario bo = new BoBeneficiario();
+        //    Beneficiario beneficiario = bo.Consultar(id);
+        //    BeneficiarioModel model = null;
 
-            if (beneficiario != null)
-            {
-                model = new BeneficiarioModel()
-                {
-                    Id = beneficiario.Id,
-                    IdCliente = beneficiario.IdCliente,
-                    Nome = beneficiario.Nome,
-                    CPF = beneficiario.CPF
-                };
-            }
+        //    if (beneficiario != null)
+        //    {
+        //        model = new BeneficiarioModel()
+        //        {
+        //            Id = beneficiario.Id,
+        //            IdCliente = beneficiario.IdCliente,
+        //            Nome = beneficiario.Nome,
+        //            CPF = beneficiario.CPF
+        //        };
+        //    }
 
-            return View(model);
-        }
+        //    return View(model);
+        //}
 
         [HttpPost]
         public JsonResult Excluir(long id)
@@ -144,7 +152,7 @@ namespace WebAtividadeEntrevista.Controllers
 
             foreach (var benef in beneficiarios)
             {
-                if (benef.CPF.Equals(model.CPF)) return true;
+                if (benef.CPF.Equals(model.CPF) && benef.Id != model.Id) return true;
             }
 
             BoCliente boc = new BoCliente();

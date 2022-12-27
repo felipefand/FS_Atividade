@@ -1,0 +1,22 @@
+﻿@section scripts{
+    @Scripts.Render("~/bundles/formBeneficiarios")
+}
+
+<div class="container">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Beneficiários</h4>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("Forms")
+                <hr>
+                <table id="gridBeneficiarios" class="table"></table>
+            </div>
+            <p>Para Alterar: Digite CPF e Nome e clique no beneficiário que você gostaria de editar.</p>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Fechar</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>

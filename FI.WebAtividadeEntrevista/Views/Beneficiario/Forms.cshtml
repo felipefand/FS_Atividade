@@ -1,0 +1,21 @@
+﻿
+@section scripts{
+    <script>
+        var urlPost = '@Url.Action("Incluir", "Beneficiario", new { area = "" })';
+    </script>
+}
+<form id="formBeneficiario" method="post">
+    <div class="row align-items-end mb-2">
+        <div class="col-md-5">
+            <label for="CPF">CPF:</label>
+            <input id="beneficiario-cpf" required="required" type="text" class="form-control" name="CPF" placeholder="Ex.: 010.011.111-00" maxlength="14">
+        </div>
+        <div class="col-md-5">
+            <label for="Nome">Nome:</label>
+            <input id="beneficiario-nome" required="required" type="text" class="form-control" name="Nome" placeholder="Ex.: João" maxlength="50">
+        </div>
+        <div class="col-md-2">
+            <button id="beneficiario-btn" type="submit" class="btn btn-sm btn-success">Incluir</button>
+        </div>
+    </div>
+</form>

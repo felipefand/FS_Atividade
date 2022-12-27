@@ -19,7 +19,8 @@ namespace WebAtividadeEntrevista.Controllers
 
         public ActionResult Incluir()
         {
-            return View();
+            ClienteModel model = new ClienteModel() { Id = 0 };
+            return View(model);
         }
 
         [HttpPost]
